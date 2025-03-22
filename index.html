@@ -7,29 +7,45 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="weather-widget">
-        <h2 id="weather-text">Loading...</h2>
+    <div class="weather-container">
+        <h2>🌤️ Live Weather</h2>
+        <input type="text" id="cityInput" placeholder="Enter city name...">
+        <button id="getWeather">Get Weather</button>
+        <div class="weather-info">
+            <img id="weatherIcon" src="" alt="">
+            <h3 id="cityName"></h3>
+            <p id="temperature"></p>
+            <p id="weatherDesc"></p>
+        </div>
+        <p id="errorMsg"></p>
     </div>
 
     <script>
-        function getWeather() {
-            const weatherText = document.getElementById("weather-text");
-            const widget = document.querySelector(".weather-widget");
+        document.getElementById("getWeather").addEventListener("click", () => {
+            const apiKey = "your_api_key_here"; // Replace with your OpenWeather API key
+            const city = document.getElementById("cityInput").value;
+            const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`;
 
-            let weatherCondition = "Sunny"; 
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.cod === "404") {
+                        document.getElementById("errorMsg").textContent = "City not found!";
+                        return;
+                    }
 
-            weatherText.textContent = weatherCondition;
+                    document.getElementById("errorMsg").textContent = "";
+                    document.getElementById("cityName").textContent = data.name;
+                    document.getElementById("temperature").textContent = `🌡️ ${data.main.temp}°C`;
+                    document.getElementById("weatherDesc").textContent = `🌍 ${data.weather[0].description}`;
+                    document.getElementById("weatherIcon").src = `https://openweathermap.org/img/wn/${data.weather[0].icon}.png`;
 
-            if (weatherCondition === "Sunny") {
-                widget.style.background = "linear-gradient(to right, yellow, orange)";
-            } else if (weatherCondition === "Rainy") {
-                widget.style.background = "linear-gradient(to right, blue, gray)";
-            } else if (weatherCondition === "Cloudy") {
-                widget.style.background = "linear-gradient(to right, lightgray, darkgray)";
-            }
-        }
-
-        window.onload = getWeather;
+                    // Change background based on weather
+                    let weatherMain = data.weather[0].main.toLowerCase();
+                    document.body.className = weatherMain;
+                })
+                .catch(error => console.error("Error fetching weather:", error));
+        });
     </script>
 </body>
 </html>
