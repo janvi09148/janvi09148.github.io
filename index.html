@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Widget</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="weather-widget">
+        <h2 id="weather-text">Loading...</h2>
+    </div>
+
+    <script>
+        function getWeather() {
+            const weatherText = document.getElementById("weather-text");
+            const widget = document.querySelector(".weather-widget");
+
+            let weatherCondition = "Sunny"; 
+
+            weatherText.textContent = weatherCondition;
+
+            if (weatherCondition === "Sunny") {
+                widget.style.background = "linear-gradient(to right, yellow, orange)";
+            } else if (weatherCondition === "Rainy") {
+                widget.style.background = "linear-gradient(to right, blue, gray)";
+            } else if (weatherCondition === "Cloudy") {
+                widget.style.background = "linear-gradient(to right, lightgray, darkgray)";
+            }
+        }
+
+        window.onload = getWeather;
+    </script>
+</body>
+</html>
